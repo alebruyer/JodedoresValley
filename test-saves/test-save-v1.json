@@ -1,0 +1,20 @@
+{
+  "saveVersion": 1,
+  "savedAt": "2026-01-01T10:00:00.000Z",
+  "player": { "worldId": "ciudad", "x": 1182, "y": 706, "facing": "down" },
+  "inventory": ["kebab"],
+  "discovered": { "npcs": ["Xokas", "Mara"], "items": ["kebab"], "buildings": [] },
+  "flags": {
+    "money": 100,
+    "questXokasDone": true,
+    "questKebabDone": true
+  },
+  "quests": [
+    { "id": "xokas", "done": true, "hidden": false },
+    { "id": "kebab", "done": true, "hidden": false },
+    { "id": "mara-kebab", "done": false, "hidden": false }
+  ],
+  "flagPoles": [],
+  "museumDisplays": [],
+  "collectedWorldItems": []
+}

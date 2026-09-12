@@ -1,0 +1,5 @@
+{
+  "saveVersion": 1,
+  "player": { "worldId": "sevilla", "x": 900, "y": 700, "facing": "down" },
+  "flags": { "money": 250, "questXokasDone": true, "questParacetamorActive": true, "patoCount": 5 }
+}

@@ -1,0 +1,10 @@
+{
+  "player": { "worldId": "ciudad", "x": 1182, "y": 706, "facing": "down" },
+  "inventory": [],
+  "discovered": { "npcs": ["Xokas"], "items": [], "buildings": [] },
+  "flags": { "money": 25, "questXokasDone": true },
+  "quests": [{ "id": "xokas", "done": true, "hidden": false }],
+  "flagPoles": [],
+  "museumDisplays": [],
+  "collectedWorldItems": []
+}
