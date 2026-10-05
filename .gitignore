@@ -2,3 +2,9 @@
 Thumbs.db
 *.log
 node_modules/
+
+# Material interno que no hace falta para jugar
+sin-usar/
+test-saves/
+aldea-isla.BACKUP-preorganize.html
+_test_*.js
