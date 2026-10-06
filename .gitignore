@@ -8,3 +8,6 @@ sin-usar/
 test-saves/
 aldea-isla.BACKUP-preorganize.html
 _test_*.js
+
+# Tráiler en producción (no es parte del juego)
+trailer/

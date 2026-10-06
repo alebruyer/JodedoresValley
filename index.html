@@ -1535,7 +1535,7 @@
       </div>
       <div id="locationBanner" class="location-banner" aria-hidden="true"><span id="locationBannerText"></span></div>
       <div class="minimap" aria-hidden="true"><div class="mm-river" data-mm-world="ciudad"></div><div class="mm-sand" data-mm-world="ciudad"></div><div class="mm-sea" data-mm-world="ciudad"></div><div id="mmDot"></div><button id="mapToggle" type="button" aria-label="Ver mapa completo">M</button></div>
-      <button id="musicToggle" type="button" aria-label="Activar música">🔇</button>
+      <button id="musicToggle" type="button" aria-label="Silenciar música">🔊</button>
       <button id="saveMenuToggle" type="button" aria-label="Partida guardada">💾</button>
       <div id="saveMenuPanel" class="save-menu-panel" aria-hidden="true">
         <p class="save-menu-title">Partida</p>
@@ -2186,7 +2186,10 @@
     jodedorMusic.volume=0.3;
     const horrorMusic=document.querySelector('#horrorMusic'); horrorMusic.volume=0.4;
     sfxTransform.volume=0.6;
-    let musicMuted=true, musicStarted=false;
+    // La música está ACTIVADA por defecto (empieza con el primer clic/tecla, como exigen los navegadores). Si el jugador la silencia, se recuerda su elección.
+    let musicMuted=false, musicStarted=false;
+    try{ if(localStorage.getItem('jv.musicMuted')==='1') musicMuted=true; }catch(e){}
+    if(musicMuted){ musicToggle.textContent='🔇'; musicToggle.setAttribute('aria-label','Activar música'); }
     // Música de atmósfera de horror: SOLO suena dentro de la tienda de piscinas (donde está la nota de Pomodoro); sustituye a la música normal mientras estás dentro
     let horrorActive=false;
     function horrorStart(){ horrorActive=true; bgMusic.pause(); jodedorMusic.pause(); if(!musicMuted){ horrorMusic.currentTime=0; horrorMusic.play().catch(()=>{}); } }
@@ -2196,7 +2199,7 @@
     addEventListener('keydown', startMusicOnce, {once:false});
     addEventListener('pointerdown', startMusicOnce, {once:false});
     musicToggle.addEventListener('click', ()=>{
-      musicMuted=!musicMuted;
+      musicMuted=!musicMuted; try{ localStorage.setItem('jv.musicMuted', musicMuted?'1':'0'); }catch(e){}
       const activeRoom=document.querySelector('.interior-room.active');
       const jodedorActive=inInterior && activeRoom && activeRoom.dataset.room==='jodedor';
       if(musicMuted){ bgMusic.pause(); jodedorMusic.pause(); horrorMusic.pause(); musicToggle.textContent='🔇'; musicToggle.setAttribute('aria-label','Activar música'); }
