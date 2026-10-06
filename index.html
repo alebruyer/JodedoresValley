@@ -445,12 +445,14 @@
     .arte-game-panel .arte-canvas-img { border:10px solid #8a5a2b; border-image:none; box-shadow:0 0 0 3px #3c2412, 0 10px 18px #000a; border-radius:3px; }
     .arte-game-panel #arteCanvas { cursor:url('ui/minijuegos/cursor-pincel.png') 6 56, crosshair; }
     .arte-canvas-label { font-family:'VT323',monospace; font-size:1.1rem; color:#7a6a52; }
-    .arte-canvas-img { width:38vmin; height:38vmin; max-width:100%; max-height:100%; border:3px solid #2c2118; image-rendering:pixelated; background:#fff; cursor:crosshair; touch-action:none; }
-    /* paleta real: el HUD de madera con las muestras dentro del hueco central */
-    .arte-palette { position:relative; width:min(86%,640px); aspect-ratio:2058/606; margin:6px auto 2px; background:url('ui/minijuegos/hud-paleta.png') center/100% 100% no-repeat; flex-shrink:0; display:flex; flex-wrap:wrap; align-content:center; justify-content:center; gap:3%; box-sizing:border-box; padding:0 20% 0 18.5%; }
-    .arte-color-btn { width:11%; aspect-ratio:1; max-width:26px; border:2px solid #2c2118; border-radius:5px; cursor:pointer; padding:0; box-shadow:inset 0 2px #fff6, 0 2px #0006; }
+    /* Prioridad: el cuadro de referencia y el lienzo ocupan todo el alto libre (siempre cuadrados). Los colores van en un recuadro compacto de una sola fila. */
+    .arte-game-canvases { container-type:size; }   /* sus medidas (cqw/cqh) fijan el tamaño máximo de los dos cuadros: lo más grande posible y siempre cuadrados */
+    .arte-canvas-wrap { min-height:0; }
+    .arte-canvas-img { flex:none; width:min(calc(50cqw - 44px), calc(100cqh - 46px)); height:auto; aspect-ratio:1/1; border:3px solid #2c2118; image-rendering:pixelated; background:#fff; cursor:crosshair; touch-action:none; }
+    .arte-palette { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px; width:fit-content; max-width:94%; margin:6px auto 4px; padding:7px 12px; box-sizing:border-box; flex-shrink:0; background:#4a2a14d9; border:3px solid #c68642; border-radius:8px; box-shadow:0 4px 10px #0008; }
+    .arte-color-btn { width:30px; height:30px; border:2px solid #2c2118; border-radius:4px; cursor:pointer; padding:0; box-shadow:inset 0 2px #fff6, 0 2px #0006; }
     .arte-game-panel .arte-color-btn { margin:0; }
-    .arte-color-btn.selected { outline:3px solid #ff2d8a; outline-offset:1px; transform:translateY(-2px) scale(1.12); }
+    .arte-color-btn.selected { outline:3px solid #ff2d8a; outline-offset:1px; transform:scale(1.12); }
     .maid-icon-btn { font-size:2.6rem; padding:10px; border:3px solid #b0446f; background:#ffe3f1e6; cursor:pointer; box-shadow:2px 3px #6a1e44; transition:transform .1s; border-radius:12px; }
     .maid-icon-btn:active:not(:disabled) { transform:scale(.92); }
     .maid-icon-btn.lit { background:#fff0a8; transform:scale(1.1); box-shadow:0 0 14px #ffd54f, 2px 3px #6a1e44; }
