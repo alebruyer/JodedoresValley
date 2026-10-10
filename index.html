@@ -2761,6 +2761,7 @@
     function updateJaponGate(){
       try{ if(!japonUnlocked) return; }catch(e){ return; }
       try{ if(japonQuestStage===0 && tecladoQuestStage<5) return; }catch(e){ return; }   // antes hay que terminar "La movida del teclado"
+      if(!japonGroupMoved && typeof moveRubiusToJapon==='function'){ try{ moveRubiusToJapon(); moveSkainToJapon(); moveGroupToJapon(); freeWerlyb(); }catch(e){} }   // el paso se abre: ahora sí se mudan
       const cordonImg=document.querySelector('#japonCordonImg');
       if(cordonImg) cordonImg.style.display='none';
       const cordonBlock=document.querySelector('#japonCordonBlock');
@@ -4428,9 +4429,18 @@ function checkSafariGateBlock(){
     }
     // Idempotente: coloca a cada personaje según japonGroupMoved / etapa (al desbloquear
     // Japón, tras el beef y al cargar partida).
+    // Japón es ACCESIBLE cuando se ha entregado la carta Y se ha abierto el cordón (misión del teclado hecha, o misión de Japón ya empezada en partidas antiguas).
+    // El grupo (Zeling, Mara, Xokas, Skain) y Rubius solo se mudan a Japón en ese momento: antes se mudaban al dar la carta y, con el paso cerrado,
+    // Mara desaparecía de Sevilla y no se podía conseguir su pato (misión de Paracetamor) ni hablar con ellos.
+    function japonOpen(){ return !!japonUnlocked && (japonQuestStage>0 || tecladoQuestStage>=5); }
     function applyJaponGroupState(){
-      if(japonUnlocked) japonGroupMoved=true;
-      if(!japonGroupMoved) return;
+      if(japonOpen()) japonGroupMoved=true;
+      else if(japonQuestStage===0) japonGroupMoved=false;   // todavía no se puede ir: nadie se ha mudado (también corrige partidas guardadas con la mudanza anticipada)
+      if(!japonGroupMoved){
+        ['xokasJaponNpc','skainJaponNpc','maraJaponNpc','zelingJaponNpc','rubiusJaponNpc'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('npc-hidden'); const feet=document.getElementById(id.replace('Npc','Feet')); if(feet) feet.classList.add('npc-hidden'); });
+        const ms=document.getElementById('maraSevillaNpc'); if(ms && questSafariTripDone) ms.classList.remove('npc-hidden');
+        return;
+      }
       const show=(id,on)=>{
         const el=document.getElementById(id); if(el) el.classList.toggle('npc-hidden',!on);
         const feet=document.getElementById(id.replace('Npc','Feet')); if(feet) feet.classList.toggle('npc-hidden',!on);
@@ -6810,10 +6820,7 @@ function brawlPop(){
       removeItem('carta-pokemon','items/carta pokemon.png');
       japonUnlocked=true;
       setFriendshipHearts('Rubius',3);   // sin saltarse el 2.º: si aún no tiene el Badge, el 3.º queda ganado y el 2.º pendiente
-      moveRubiusToJapon();
-      moveSkainToJapon();
-      moveGroupToJapon(); // Zeling, Mara, Xokas y Skain al corro de UNO de Japón
-      freeWerlyb();
+      if(japonOpen()){ moveRubiusToJapon(); moveSkainToJapon(); moveGroupToJapon(); freeWerlyb(); }   // Zeling, Mara, Xokas y Skain al corro de UNO de Japón (si el paso sigue cerrado, se mudan al abrirse)
       startQuestCruzaSepelandSur();
     }
     function moveRubiusToJapon(){
@@ -7273,7 +7280,7 @@ function brawlPop(){
       }
       URBANIZACION_DAY_ONLY_NAMES.forEach(name=>{
         const el=world3.querySelector('[data-name="'+name+'"]');
-        if(el) el.classList.toggle('npc-hidden', urbanizacionNightSnapshot);
+        if(el) el.classList.toggle('npc-hidden', urbanizacionNightSnapshot || (name==='Rubius' && japonGroupMoved));   // Rubius ya vive en Japón: no reaparece aquí
       });
       const lucianaEl=world3.querySelector('[data-name="Luciana"]');
       if(lucianaEl) lucianaEl.classList.toggle('npc-hidden', lucianaMovedToZeling);
@@ -7970,7 +7977,7 @@ function brawlPop(){
       if(questHablaChesardoFinalDone) document.querySelectorAll('.hidden-until-pomodoro').forEach(el=>el.classList.remove('hidden-until-pomodoro'));
       applyJaponGroupState(); refreshJaponQuestTexts(); // misión "La movida de Japón": NPCs en su sitio según la etapa
       if(museoPalomiteroDonated){ const disp=document.querySelector('#museoPalomiteroDisplay'); if(disp) disp.style.display='block'; }
-      if(japonUnlocked){
+      if(japonOpen()){
         if(typeof moveRubiusToJapon==='function') moveRubiusToJapon();
         if(typeof moveSkainToJapon==='function') moveSkainToJapon();
         if(typeof freeWerlyb==='function') freeWerlyb();
