@@ -3081,7 +3081,9 @@
     function afterMove(moved){ updateFootstepSound(moved); if(moved){ checkBeachTransition(); checkBridgeCrossing(); checkMap2Exit(); checkSideMapCrossing(); checkSideMapExit(); checkSevillaCrossing(); checkSevillaExit(); checkSafariGateBlock(); checkMuseumMapCrossing(); checkMuseumMapExit(); checkSepelandCrossing(); checkSepelandExit(); checkJaponCrossing(); checkJaponExit(); } }
     function move(dx,dy){ if(transforming||inInterior||dialogueOpen||mapFading||sceneLock||document.querySelector('#gachaShop.open,#juanaShop.open,#correosOverlay.open,#maidGameOverlay.open,#karaokeOverlay.open,#pondGameOverlay.open,#arteGameOverlay.open')) return false; const nx=Math.max(0,Math.min(worldW-playerW,x+dx)),ny=Math.max(0,Math.min(worldH-playerH,y+dy)); if(Math.abs(dx)>Math.abs(dy))player.dataset.facing=dx<0?'left':'right'; else if(dy)player.dataset.facing=dy<0?'up':'down'; player.style.transform=player.dataset.facing==='left'?'scaleX(-1)':''; const alreadyStuck=collides(x,y); if(alreadyStuck||!collides(nx,ny)){x=nx;y=ny;player.style.left=x+'px';player.style.top=y+'px'; player.style.zIndex=Math.round(y+playerH); if(performance.now()-lastStep>230){walkFrame=1-walkFrame;lastStep=performance.now();} paintSprite(); updateCamera(); message.style.display='none'; return true;}else{walkFrame=0;paintSprite();player.style.filter='brightness(.9)';setTimeout(()=>player.style.filter='',120); return false;} }
     const interactPrompt=document.querySelector('#interactPrompt'), interactPromptText=document.querySelector('#interactPromptText');
-    function loop(){if(camSmooth) updateCamera();const dir=heldDirs[heldDirs.length-1];let dx=0,dy=0;if(dir==='left')dx=-speed;else if(dir==='right')dx=speed;else if(dir==='up')dy=-speed;else if(dir==='down')dy=speed;
+    // BUCLE PRINCIPAL A PASO FIJO: la lógica (movimiento, seguidores, cámara, coche…) va en loopStep y se ejecuta 60 veces por segundo reales,
+    // sin importar los Hz del monitor (a 144 Hz el personaje iba 2,4 veces más rápido porque se movía 4,5 px por cada fotograma dibujado).
+    function loopStep(){if(camSmooth) updateCamera();const dir=heldDirs[heldDirs.length-1];let dx=0,dy=0;if(dir==='left')dx=-speed;else if(dir==='right')dx=speed;else if(dir==='up')dy=-speed;else if(dir==='down')dy=speed;
       if(inInterior){
         if(dx||dy) moveInterior(dx,dy);
         else if(interiorWalkFrame){ interiorWalkFrame=0; const r=document.querySelector('.interior-room.active'); paintInteriorSprite(activeInteriorPeepo(), r?getPeepoScale(r):1); }
@@ -3093,7 +3095,16 @@
         if(inCar) syncCarPosition(dx);
         if(inCar) checkCarAnimalCollision();
       }
-      updateInteractPrompt();updateDayNightVisuals();updateSepelandGate();updateJaponGate();requestAnimationFrame(loop)}
+      updateInteractPrompt();updateDayNightVisuals();updateSepelandGate();updateJaponGate();}
+    const LOOP_STEP_MS=1000/60; let loopLastT=0, loopAcc=0;
+    function loop(now){
+      if(typeof now!=='number') now=performance.now();
+      if(!loopLastT) loopLastT=now;
+      loopAcc+=Math.min(100, now-loopLastT); loopLastT=now;          // tope de 100 ms: al volver de otra pestaña no se acumulan pasos
+      let n=0; while(loopAcc>=LOOP_STEP_MS-2 && n<4){ loopStep(); loopAcc-=LOOP_STEP_MS; n++; }   // monitor lento (30 Hz): 2 pasos; monitor rápido (144 Hz): a veces ninguno
+      if(loopAcc<0) loopAcc=0;
+      requestAnimationFrame(loop);
+    }
     player.style.left=x+'px';player.style.top=y+'px';player.style.zIndex=Math.round(y+playerH);paintSprite();updateCamera();updateTreeDepth();loop();
     const keyMap={KeyW:'up',KeyA:'left',KeyS:'down',KeyD:'right'};
 function findNearbyCar(){
