@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Jodedor Valley — Minijuego</title>
   <link rel="preload" as="image" href="ui/fondo-inicio.png">
-  <link rel="preload" as="image" href="ui/logo.png">
+  <link rel="preload" as="image" href="ui/logo-halloween.png">
   <style>
     @font-face { font-family:'VT323'; src:url('ui/VT323-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
     :root { color-scheme: light; }
     * { box-sizing: border-box; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
-    body { margin: 0; height: 100vh; display: grid; place-items: center; padding: 20px; background: repeating-linear-gradient(90deg,#80b5df 0 12px,#89bee7 12px 24px); font-family: monospace; color: #3c2920; image-rendering: pixelated; overflow: hidden; }
+    body { margin: 0; height: 100vh; display: grid; place-items: center; padding: 20px; background: repeating-linear-gradient(90deg,#2a1640 0 12px,#35204f 12px 24px); font-family: monospace; color: #3c2920; image-rendering: pixelated; overflow: hidden; }
     img { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
     .game-shell { width: min(1300px, calc(100vw - 40px), calc((100vh - 110px) * 1.6)); }
     #disclaimerToggle { position:fixed; left:14px; bottom:14px; z-index:30; width:32px; height:32px; border:3px solid #5c3d2e; border-radius:50%; background:#ffedb0; box-shadow:3px 3px #5c3d2e; font-size:15px; line-height:1; cursor:pointer; padding:0; }
@@ -615,7 +615,7 @@
 <body>
   <div id="authGate" class="auth-gate" role="dialog" aria-modal="true" aria-label="Bienvenida">
     <div id="authWelcomePanel" class="auth-box" hidden>
-      <img class="auth-logo" src="ui/logo.png" alt="Jodedor Valley">
+      <img class="auth-logo" src="ui/logo-halloween.png" alt="Jodedor Valley">
       <p id="authWelcomeText" class="auth-welcome-text"></p>
       <button type="button" id="authWelcomeNextBtn" class="auth-submit">Siguiente</button>
     </div>
@@ -635,7 +635,7 @@
     <p>Este es un proyecto fan-made y no oficial creado como homenaje/parodia del contenido y memes asociados a Zeling. Las marcas y nombres de terceros que aparecen pertenecen a sus respectivos propietarios y no implican patrocinio, afiliación o respaldo.</p>
   </div>
   <main class="game-shell">
-    <div class="topbar"><img class="logo" src="ui/logo.png" alt="Jodedor Valley"></div>
+    <div class="topbar"><img class="logo" src="ui/logo-halloween.png" alt="Jodedor Valley"></div>
     <section id="game" aria-label="Mapa de la isla, ahora mucho más grande. Usa W, A, S y D para moverte y E para interactuar.">
       <!-- CIUDAD (mapa de spawn) -->
       <!-- Ancho ampliado de 2400 a 2800 (2026-09-15, a petición del usuario) para igualar
@@ -1347,16 +1347,16 @@
         <div class="safari-zone" data-open-side="bottom" style="left:1040px;top:60px;width:740px;height:680px"></div>
         <div class="safari-zone" data-open-side="top" style="left:1040px;top:860px;width:740px;height:680px"></div>
         <div class="safari-zone" data-open-side="top" style="left:280px;top:860px;width:740px;height:680px"></div>
-        <div class="npc obstacle interactable safari-animal" style="left:430px;top:370px" data-wander-radius="150" data-name="Cebra" data-line="La cebra bufa y sigue paciendo."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:110px;height:154px;background-image:url('animales/cebra-fixed.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,7"></div></div>
-        <div class="npc obstacle interactable safari-animal" style="left:720px;top:470px" data-wander-radius="150" data-name="Cebra" data-line="La cebra bufa y sigue paciendo."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:110px;height:154px;background-image:url('animales/cebra-fixed.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,7"></div></div>
-        <div class="npc obstacle interactable safari-animal" style="left:1220px;top:310px" data-wander-radius="150" data-name="Elefante" data-line="El elefante agita las orejas perezosamente."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:150px;height:210px;background-image:url('animales/elefante-fixed.png')" data-frames-down="0,0" data-frames-up="1,1" data-frames-side="2,7"></div></div>
-        <div class="npc obstacle interactable safari-animal" style="left:1520px;top:400px" data-wander-radius="150" data-name="Elefante" data-line="El elefante agita las orejas perezosamente."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:150px;height:210px;background-image:url('animales/elefante-fixed.png')" data-frames-down="0,0" data-frames-up="1,1" data-frames-side="2,7"></div></div>
-        <div class="npc obstacle interactable safari-animal" style="left:1380px;top:200px" data-wander-radius="120" data-name="Jirafa" data-line="La jirafa mastica hojas de un árbol alto."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:130px;height:182px;background-image:url('animales/jirafa-fixed.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,7"></div></div>
+        <div class="npc obstacle interactable safari-animal" style="left:430px;top:370px" data-wander-radius="150" data-name="Cebra" data-line="La cebra bufa y sigue paciendo."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:110px;height:154px;background-image:url('animales/cebra-halloween.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,7"></div></div>
+        <div class="npc obstacle interactable safari-animal" style="left:720px;top:470px" data-wander-radius="150" data-name="Cebra" data-line="La cebra bufa y sigue paciendo."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:110px;height:154px;background-image:url('animales/cebra-halloween.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,7"></div></div>
+        <div class="npc obstacle interactable safari-animal" style="left:1220px;top:310px" data-wander-radius="150" data-name="Elefante" data-line="El elefante agita las orejas perezosamente."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:150px;height:210px;background-image:url('animales/elefante-halloween.png')" data-frames-down="0,0" data-frames-up="1,1" data-frames-side="2,7"></div></div>
+        <div class="npc obstacle interactable safari-animal" style="left:1520px;top:400px" data-wander-radius="150" data-name="Elefante" data-line="El elefante agita las orejas perezosamente."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:150px;height:210px;background-image:url('animales/elefante-halloween.png')" data-frames-down="0,0" data-frames-up="1,1" data-frames-side="2,7"></div></div>
+        <div class="npc obstacle interactable safari-animal" style="left:1380px;top:200px" data-wander-radius="120" data-name="Jirafa" data-line="La jirafa mastica hojas de un árbol alto."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:130px;height:182px;background-image:url('animales/jirafa-halloween.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,7"></div></div>
         <div class="npc obstacle interactable" style="left:1150px;top:550px" data-name="Rodri" data-line="Scuba"><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="background-image:url('personajes/rodri-fixed.png')"></div></div>
-        <div class="npc obstacle interactable safari-animal" style="left:400px;top:960px" data-wander-radius="150" data-name="Avestruz" data-line="La avestruz picotea el suelo en busca de comida."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:110px;height:154px;background-image:url('animales/avestruz-fixed.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,5"></div></div>
-        <div class="npc obstacle interactable safari-animal" style="left:630px;top:1080px" data-wander-radius="150" data-name="Avestruz" data-line="La avestruz picotea el suelo en busca de comida."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:110px;height:154px;background-image:url('animales/avestruz-fixed.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,5"></div></div>
+        <div class="npc obstacle interactable safari-animal" style="left:400px;top:960px" data-wander-radius="150" data-name="Avestruz" data-line="La avestruz picotea el suelo en busca de comida."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:110px;height:154px;background-image:url('animales/avestruz-halloween.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,5"></div></div>
+        <div class="npc obstacle interactable safari-animal" style="left:630px;top:1080px" data-wander-radius="150" data-name="Avestruz" data-line="La avestruz picotea el suelo en busca de comida."><div class="npc-walksprite" data-facing="down" data-sprite-size="big" style="width:110px;height:154px;background-image:url('animales/avestruz-halloween.png')" data-frames-down="0,1" data-frames-up="2,3" data-frames-side="4,5"></div></div>
         <div class="npc obstacle interactable" style="left:1350px;top:1200px" data-name="Juana"><div class="npc-walksprite" data-facing="down" style="background-image:url('personajes/juana nabos.png')"></div></div>
-        <div class="npc obstacle interactable safari-animal" style="left:520px;top:1150px" data-name="Pájara" data-wander-radius="0" data-line="Birdge"><div style="transform:scale(1.8333);transform-origin:50% 100%"><div class="npc-walksprite" data-facing="down" style="background-image:url('animales/avestruz peluca.png')"></div></div></div>
+        <div class="npc obstacle interactable safari-animal" style="left:520px;top:1150px" data-name="Pájara" data-wander-radius="0" data-line="Birdge"><div style="transform:scale(1.8333);transform-origin:50% 100%"><div class="npc-walksprite" data-facing="down" style="background-image:url('animales/la-pajara-halloween.png')"></div></div></div>
         <img class="savanna-tree" src="decoracion/arbol-sabana-r2-0.png" alt="" style="position:absolute;left:350px;top:150px;height:180px;aspect-ratio:264/264;pointer-events:none;image-rendering:pixelated">
         <img class="savanna-tree" src="decoracion/arbol-sabana-r2-2.png" alt="" style="position:absolute;left:1550px;top:120px;height:180px;aspect-ratio:306/250;pointer-events:none;image-rendering:pixelated">
         <img class="savanna-tree" src="decoracion/arbol-sabana-r2-3.png" alt="" style="position:absolute;left:1550px;top:1000px;height:180px;aspect-ratio:295/264;pointer-events:none;image-rendering:pixelated">
@@ -1365,7 +1365,7 @@
         <img class="savanna-tree" src="decoracion/arbol-sabana-r2-4.png" alt="" style="position:absolute;left:1070px;top:100px;height:150px;aspect-ratio:170/170;pointer-events:none;image-rendering:pixelated">
         <img class="savanna-tree" src="decoracion/arbol-sabana-r2-1.png" alt="" style="position:absolute;left:1060px;top:920px;height:180px;aspect-ratio:246/198;pointer-events:none;image-rendering:pixelated">
         <img class="savanna-tree" src="decoracion/arbol-sabana-r2-5.png" alt="" style="position:absolute;left:550px;top:920px;height:130px;aspect-ratio:257/139;pointer-events:none;image-rendering:pixelated">
-        <div class="npc-walksprite" id="roadAnimal" data-facing="down" data-sprite-size="big" style="position:absolute;left:825px;top:600px;width:150px;height:210px;background-image:url('animales/elefante-fixed.png');background-size:1200px auto;background-position:0px 0px;z-index:6"></div>
+        <div class="npc-walksprite" id="roadAnimal" data-facing="down" data-sprite-size="big" style="position:absolute;left:825px;top:600px;width:150px;height:210px;background-image:url('animales/elefante-halloween.png');background-size:1200px auto;background-position:0px 0px;z-index:6"></div>
         <div class="ground-item interactable hidden-until-paracetamor" id="patoSafari1" style="left:600px;top:650px" data-name="Pato" aria-label="Pato"><img src="items/pato.png" alt="Pato"></div>
         <div class="ground-item interactable hidden-until-paracetamor" id="patoSafari2" style="left:900px;top:1000px" data-name="Pato" aria-label="Pato"><img src="items/pato.png" alt="Pato"></div>
         <div class="npc obstacle interactable npc-hidden" id="nikkitaNpc" style="left:900px;top:950px" data-wander-radius="40" data-name="Nikkita"><div class="npc-walksprite" data-facing="down" style="background-image:url('personajes/sprite nikkita.png')"></div></div>
@@ -2132,7 +2132,7 @@
   <script>
     // Pantalla de login: se muestra cuando el fondo y el logo están cargados (o a los 2,5 s como máximo)
     (function(){ const g=document.getElementById('authGate'); if(!g) return; let done=false; const show=()=>{ if(done) return; done=true; g.classList.add('ready'); };
-      Promise.all(['ui/fondo-inicio.png','ui/logo.png'].map(src=>new Promise(r=>{ const i=new Image(); i.onload=i.onerror=r; i.src=src; }))).then(show); setTimeout(show,2500); })();
+      Promise.all(['ui/fondo-inicio.png','ui/logo-halloween.png'].map(src=>new Promise(r=>{ const i=new Image(); i.onload=i.onerror=r; i.src=src; }))).then(show); setTimeout(show,2500); })();
     const game=document.querySelector('#game'), world=document.querySelector('#ciudad'), player=document.querySelector('#player'), message=document.querySelector('#message'), msgName=document.querySelector('#msgName'), msgText=document.querySelector('#msgText'), mmDot=document.querySelector('#mmDot'), sfxGrass=document.querySelector('#sfxGrass'), bgMusic=document.querySelector('#bgMusic'), jodedorMusic=document.querySelector('#jodedorMusic'), musicToggle=document.querySelector('#musicToggle'), sfxTransform=document.querySelector('#sfxTransform'), sfxQuestDone=document.querySelector('#sfxQuestDone'), sfxNewItem=document.querySelector('#sfxNewItem'), sfxOk=document.querySelector('#sfxOk'), dialogOkBtn=document.querySelector('#dialogOk');
     let activeWorld=world;
     // Modo escena (cinemáticas): sceneLock bloquea al jugador, camFocusEl hace que la cámara
@@ -3144,7 +3144,7 @@ function applyRoadAnimalDeadVisual(){
   const aw=parseFloat(animal.style.width)||150, ah=parseFloat(animal.style.height)||210;
   const deadW=200, deadH=80;
   const cx=al+aw/2, cyBottom=at+ah;
-  animal.style.backgroundImage="url('animales/atropellado-fixed.png')";
+  animal.style.backgroundImage="url('animales/atropellado-halloween.png')";
   animal.style.backgroundSize='100% 100%';
   animal.style.backgroundPosition='0px 0px';
   animal.style.width=deadW+'px';
@@ -3268,7 +3268,7 @@ function checkSafariGateBlock(){
       {id:'Marti', sprite:'personajes/sprite marti.png', type:'b', label:'Marti'},
       {id:'Mara', sprite:'personajes/sprite mara.png', type:'b', label:'Mara'},
       {id:'Oscura', sprite:'personajes/sprite oscura.png', type:'b', label:'Oscura'},
-      {id:'Pájara', sprite:'animales/avestruz peluca.png', type:'b', label:'Pájara'},
+      {id:'Pájara', sprite:'animales/la-pajara-halloween.png', type:'b', label:'Pájara'},
       {id:'Palomitero', sprite:'personajes/sprite palomitero.png', type:'b', label:'Palomitero'},
       {id:'Paracetamor', sprite:'personajes/sprite paracetamor.png', type:'b', label:'Paracetamor'},
       {id:'Pepa', sprite:'personajes/sprite pepa.png', type:'b', label:'Pepa'},
@@ -6340,7 +6340,7 @@ function brawlPop(){
       parade.style.opacity='0'; await endSleep(1600); parade.remove(); wrap.remove();
       // 3) elección final
       const fin=document.createElement('div'); fin.className='end-final'; fin.style.display='flex';
-      const logo=document.createElement('img'); logo.src='ui/logo.png'; logo.alt='Jodedor Valley';
+      const logo=document.createElement('img'); logo.src='ui/logo-halloween.png'; logo.alt='Jodedor Valley';
       const p=document.createElement('p'); p.textContent='Gracias por jugar';
       const btns=document.createElement('div'); btns.className='end-btns';
       const b1=document.createElement('button'); b1.type='button'; b1.className='end-btn'; b1.textContent='Volver al mundo';
