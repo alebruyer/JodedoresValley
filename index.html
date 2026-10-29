@@ -613,27 +613,7 @@
   </style>
 </head>
 <body>
-  <div id="authGate" class="auth-gate" role="dialog" aria-modal="true" aria-label="Iniciar sesión">
-    <div id="authBox" class="auth-box">
-      <img class="auth-logo" src="ui/logo.png" alt="Jodedor Valley">
-      <div class="auth-tabs">
-        <button type="button" id="authTabRegister" class="auth-tab">Registrarte</button>
-        <button type="button" id="authTabLogin" class="auth-tab active">Iniciar sesión</button>
-      </div>
-      <form id="authForm" autocomplete="off">
-        <label class="auth-field">Usuario
-          <input type="text" id="authUsername" autocomplete="username" maxlength="20" required>
-        </label>
-        <label class="auth-field">Contraseña
-          <input type="password" id="authPassword" autocomplete="current-password" maxlength="60" required>
-        </label>
-        <label class="auth-field" id="authConfirmField" hidden>Repite la contraseña
-          <input type="password" id="authPasswordConfirm" autocomplete="new-password" maxlength="60">
-        </label>
-        <p id="authError" class="auth-error" aria-live="polite"></p>
-        <button type="submit" id="authSubmitBtn" class="auth-submit">Iniciar sesión</button>
-      </form>
-    </div>
+  <div id="authGate" class="auth-gate" role="dialog" aria-modal="true" aria-label="Bienvenida">
     <div id="authWelcomePanel" class="auth-box" hidden>
       <img class="auth-logo" src="ui/logo.png" alt="Jodedor Valley">
       <p id="authWelcomeText" class="auth-welcome-text"></p>
@@ -8362,109 +8342,30 @@ function brawlPop(){
     };
 
     // ============================================================================
-    // LOGIN / REGISTRO
-    // Perfiles LOCALES a este navegador (no hay servidor: el juego se publica como
-    // páginas estáticas en GitHub Pages). Cada usuario registrado en este navegador
-    // tiene su propia partida (su propio hueco de guardado, ver sección de "varias
-    // partidas" en SAVE_SYSTEM.md). La contraseña se guarda con sal + hash SHA-256,
-    // nunca en texto plano — pero al no haber verificación en un servidor, esto es
-    // una separación de partidas "de andar por casa" (pensada para que varias
-    // personas compartan el mismo ordenador/navegador), no una cuenta segura frente
-    // a alguien con acceso a las herramientas de desarrollador de ese navegador.
+    // SIN LOGIN: cada navegador/dispositivo tiene su propia partida automática
+    // (hueco 'device'). Las partidas creadas con el antiguo login (hueco user_<nombre>)
+    // se migran una sola vez al hueco 'device' (la más reciente); las originales no se borran.
+    // shortcut: si varias personas comparten navegador comparten partida; para separarlas habría que volver a tener perfiles.
     // ============================================================================
-    const USERS_STORAGE_KEY = SAVE_NAMESPACE + '.users';
+    const DEVICE_SLOT = 'device';
     let authGateOpen = true;
-
-    function normalizeUsername(name){ return String(name||'').trim().toLowerCase(); }
-    function slotForUsername(name){ return 'user_' + normalizeUsername(name).replace(/[^a-z0-9_-]/g,'_'); }
-    function loadUsers(){
-      try{ const raw=localStorage.getItem(USERS_STORAGE_KEY); return raw ? JSON.parse(raw) : {}; }
-      catch(err){ return {}; }
-    }
-    function saveUsers(users){
-      try{ localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users)); }
-      catch(err){ console.error('[Auth] No se pudo guardar el usuario', err); }
-    }
-    function randomSalt(){
-      const arr=new Uint8Array(16);
-      (window.crypto || window.msCrypto).getRandomValues(arr);
-      return Array.from(arr, b=>b.toString(16).padStart(2,'0')).join('');
-    }
-    async function hashPassword(password, salt){
-      const data=new TextEncoder().encode(salt+':'+password);
-      const digest=await crypto.subtle.digest('SHA-256', data);
-      return Array.from(new Uint8Array(digest), b=>b.toString(16).padStart(2,'0')).join('');
-    }
-
     const authGateEl=document.querySelector('#authGate');
-    const authForm=document.querySelector('#authForm');
-    const authUsernameInput=document.querySelector('#authUsername');
-    const authPasswordInput=document.querySelector('#authPassword');
-    const authPasswordConfirmInput=document.querySelector('#authPasswordConfirm');
-    const authConfirmField=document.querySelector('#authConfirmField');
-    const authErrorEl=document.querySelector('#authError');
-    const authSubmitBtn=document.querySelector('#authSubmitBtn');
-    const authTabLogin=document.querySelector('#authTabLogin');
-    const authTabRegister=document.querySelector('#authTabRegister');
-
-    let authMode='login';
-    function setAuthMode(mode){
-      authMode=mode;
-      if(authErrorEl) authErrorEl.textContent='';
-      const isRegister = mode==='register';
-      if(authTabRegister) authTabRegister.classList.toggle('active', isRegister);
-      if(authTabLogin) authTabLogin.classList.toggle('active', !isRegister);
-      if(authConfirmField) authConfirmField.hidden = !isRegister;
-      if(authPasswordConfirmInput) authPasswordConfirmInput.required = isRegister;
-      if(authSubmitBtn) authSubmitBtn.textContent = isRegister ? 'Registrarte' : 'Iniciar sesión';
-      if(authPasswordInput) authPasswordInput.autocomplete = isRegister ? 'new-password' : 'current-password';
-    }
-    if(authTabLogin) authTabLogin.addEventListener('click', ()=>setAuthMode('login'));
-    if(authTabRegister) authTabRegister.addEventListener('click', ()=>setAuthMode('register'));
-
     function closeAuthGate(){
       authGateOpen=false;
       if(authGateEl){ authGateEl.hidden=true; authGateEl.setAttribute('aria-hidden','true'); }
     }
-
-    if(authForm) authForm.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      if(authErrorEl) authErrorEl.textContent='';
-      const usernameRaw = authUsernameInput.value;
-      const password = authPasswordInput.value;
-      const normalized = normalizeUsername(usernameRaw);
-      if(!normalized){ authErrorEl.textContent='Escribe un nombre de usuario.'; return; }
-      if(!/^[a-z0-9_\- ]{2,20}$/.test(normalized)){ authErrorEl.textContent='Usuario: 2-20 caracteres (letras, números, espacio, "-" o "_").'; return; }
-      if(!password){ authErrorEl.textContent='Escribe una contraseña.'; return; }
-      const users = loadUsers();
-      authSubmitBtn.disabled = true;
+    function migrateLegacyUserSave(){
       try{
-        if(authMode==='register'){
-          if(password.length<4){ authErrorEl.textContent='La contraseña debe tener al menos 4 caracteres.'; return; }
-          if(password !== authPasswordConfirmInput.value){ authErrorEl.textContent='Las contraseñas no coinciden.'; return; }
-          if(users[normalized]){ authErrorEl.textContent='Ese usuario ya existe. Elige otro o inicia sesión.'; return; }
-          const salt = randomSalt();
-          const passwordHash = await hashPassword(password, salt);
-          users[normalized] = { displayName: usernameRaw.trim(), salt, passwordHash, createdAt: new Date().toISOString() };
-          saveUsers(users);
-          startWelcomeSequence(slotForUsername(normalized));
-        } else {
-          const record = users[normalized];
-          if(!record){ authErrorEl.textContent='Ese usuario no existe. Puedes registrarte.'; return; }
-          const hash = await hashPassword(password, record.salt);
-          if(hash !== record.passwordHash){ authErrorEl.textContent='Contraseña incorrecta.'; return; }
-          closeAuthGate();
-          startSessionForSlot(slotForUsername(normalized));
-        }
-      } catch(err){
-        console.error('[Auth] Error inesperado', err);
-        authErrorEl.textContent='Ha ocurrido un error. Inténtalo de nuevo.';
-      } finally {
-        authSubmitBtn.disabled = false;
-      }
-    });
-
-    setAuthMode('login');
+        if(localStorage.getItem(saveStorageKey(DEVICE_SLOT))) return;
+        let best=null;
+        listSaveSlots().forEach(sl=>{
+          if(sl.indexOf('user_')!==0) return;
+          const r=readSaveFromStorage(sl);
+          if(r.ok && (!best || String(r.data.savedAt||'')>String(best.savedAt||''))) best=r.data;
+        });
+        if(best) localStorage.setItem(saveStorageKey(DEVICE_SLOT), JSON.stringify(best));
+      } catch(err){ console.error('[Save] No se pudo migrar la partida antigua', err); }
+    }
 
     // ---- Mensaje de bienvenida para jugadores nuevos (solo tras registrarse) ----
     const WELCOME_MESSAGES = [
@@ -8475,7 +8376,6 @@ function brawlPop(){
     ];
     let welcomeMessageIndex = 0;
     let welcomeSlotPending = null;
-    const authBoxEl=document.querySelector('#authBox');
     const authWelcomePanelEl=document.querySelector('#authWelcomePanel');
     const authWelcomeTextEl=document.querySelector('#authWelcomeText');
     const authWelcomeNextBtn=document.querySelector('#authWelcomeNextBtn');
@@ -8487,7 +8387,6 @@ function brawlPop(){
     function startWelcomeSequence(slot){
       welcomeSlotPending = slot;
       welcomeMessageIndex = 0;
-      if(authBoxEl) authBoxEl.hidden = true;
       if(authWelcomePanelEl) authWelcomePanelEl.hidden = false;
       renderWelcomeMessage();
     }
@@ -8501,6 +8400,16 @@ function brawlPop(){
       }
       renderWelcomeMessage();
     });
+
+    // ---- Arranque: partida nueva -> bienvenida; partida existente -> directo al juego ----
+    migrateLegacyUserSave();
+    let hasDeviceSave=false;
+    try{ hasDeviceSave=!!localStorage.getItem(saveStorageKey(DEVICE_SLOT)); }catch(err){}
+    if(hasDeviceSave){
+      startSessionForSlot(DEVICE_SLOT);
+      if(document.readyState==='complete') closeAuthGate();
+      else { addEventListener('load', closeAuthGate); setTimeout(closeAuthGate, 4000); }
+    } else startWelcomeSequence(DEVICE_SLOT);
 
     // ---- Auto-test de compatibilidad (ver SAVE_SYSTEM.md, sección de pruebas) ----
     function runSaveSystemSelfTest(){

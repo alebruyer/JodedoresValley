@@ -246,7 +246,7 @@ En el panel que se abre con el botón 💾 (arriba a la izquierda, junto al de m
   si hace falta, se guarda como la partida activa y se aplica inmediatamente al juego en
   curso. Si el archivo no es válido, se avisa sin tocar la partida actual.
 
-## 9. Varias partidas — activado mediante LOGIN por usuario
+## 9. Varias partidas — hueco de guardado (el login por usuario se eliminó, ver 9.1)
 
 La API interna (`saveGame(slot)`, `loadGame(slot)`, `exportSave(slot)`,
 `importSaveFromFile(file, slot)`, `readSaveFromStorage(slot)`,
@@ -256,47 +256,18 @@ es la que hace posible el sistema de login: cada usuario registrado tiene su pro
 `slot` (`user_<nombre normalizado>`), así que la partida de cada persona vive en un hueco
 de `localStorage` completamente separado.
 
-## 9.1 Login / registro (pantalla inicial)
+## 9.1 Sin login: una partida por navegador
 
-Al abrir `index.html` siempre aparece primero una pantalla de login (`#authGate`) con
-pestañas **Iniciar sesión** / **Registrarte**. El jugador tiene que volver a escribir su
-usuario y contraseña cada vez que abre la página (no hay sesión persistente entre
-recargas, tal y como se pidió) — esto es intencional, no un fallo.
+Desde octubre de 2026 **ya no hay pantalla de login**. Al abrir el juego se usa siempre el
+hueco `device` (`jodedorValley.save.device`):
 
-**Cómo funciona por dentro** (todo en el mismo bloque de `index.html`, sección
-`LOGIN / REGISTRO`):
-
-- Los usuarios registrados en este navegador se guardan en `localStorage`, clave
-  `jodedorValley.users`, como `{ "<usuario normalizado>": { displayName, salt,
-  passwordHash, createdAt } }`.
-- La contraseña **nunca** se guarda en texto plano: se combina con una sal aleatoria por
-  usuario y se aplica SHA-256 (`crypto.subtle.digest`) antes de guardarla.
-- Al iniciar sesión o registrarte con éxito, se llama a
-  `startSessionForSlot('user_'+usuario)`, que es exactamente el mismo mecanismo de
-  "arrancar sesión de guardado" que antes se ejecutaba solo al cargar la página — ahora
-  se dispara tras el login en vez de automáticamente.
-- Una cuenta nueva (sin partida previa en su slot) arranca siempre desde
-  `DEFAULT_SAVE_SNAPSHOT`, una foto exacta del estado "de fábrica" del juego tomada en el
-  momento en que se carga la página (antes de que nadie inicie sesión). Esto evita que el
-  progreso de una cuenta se filtre a otra si, dentro de la misma pestaña, alguien prueba
-  varias cuentas seguidas sin recargar.
-
-**⚠️ Importante — qué NO es este sistema:** el juego se publica como páginas estáticas en
-GitHub Pages, sin servidor ni base de datos propia. Este login es una separación de
-partidas *local a cada navegador*, pensada para que varias personas que comparten el
-mismo ordenador tengan cada una su propia partida — **no** es una cuenta real verificada
-en un servidor, no sincroniza entre dispositivos, y no protege la contraseña frente a
-alguien con acceso a las herramientas de desarrollador de ese navegador. Si en el futuro
-hiciera falta una cuenta "de verdad" (multi-dispositivo, recuperación de contraseña,
-etc.), habría que añadir un backend — el sistema de guardado en sí (versionado,
-migraciones, export/import) seguiría funcionando igual por encima de eso.
-
-**Añadir "cerrar sesión y cambiar de usuario" sin recargar:** hoy no existe ese botón (no
-se pidió); la forma de "cambiar de cuenta" es recargar la página, lo cual ya limpia todo
-el estado en memoria. Si algún día se añade un botón de cambio de cuenta en caliente,
-debe llamar primero a `applySaveObject(JSON.parse(JSON.stringify(DEFAULT_SAVE_SNAPSHOT)))`
-antes de `startSessionForSlot(nuevoSlot)` — igual que ya hace el login internamente —
-para no arrastrar el estado de la cuenta anterior.
+- Sin partida previa -> sale la bienvenida (4 mensajes) y empieza una partida nueva.
+- Con partida -> entra directo y la carga.
+- **Migración:** si no existe `device` pero hay partidas del antiguo login (`user_<nombre>`),
+  se copia la de `savedAt` más reciente a `device` (`migrateLegacyUserSave`). Las originales
+  no se borran.
+- Limitación: quien comparta navegador comparte partida; no sincroniza entre dispositivos.
+  Para eso (o para varios perfiles) haría falta volver a añadir perfiles o un backend.
 
 ## 10. Qué NO tocar / filosofía general
 
